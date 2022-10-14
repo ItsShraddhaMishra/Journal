@@ -1,0 +1,109 @@
+* In Bash, to view the current directory in Windows File Explorer enter:  explorer.exe .
+* CURRENT DIRECTORY: pwd
+* /mnt/c is the exact same as C:\. It's just the syntax for getting to it from WSL.
+* ssh -i ~/.ssh/RinoSpeech@34.172.203.198
+* * ssh -i //wsl.localhost/Ubuntu-20.04/home/wsl/.ssh/RinoSpeech ssh-copy-id
+* ssh -i ~/.ssh/mishra  
+* docker ps
+* docker-compose down
+* docker-compose up -d
+* git revert --strategy resolve 1d1c382    //delete a certain commit
+* git status
+* git commit -m "<insert message>"
+*<be in branch A> git push origin --delete <branch B>
+*git push -u origin <new branch>
+
+## Revert back N number of commits
+
+git checkout master # go to master branch
+git pull # sync the commits that are on Bitbucket
+git log --oneline # to see which commit we want to go back to
+git reset --soft 5030f12 # 5030f12 is the commit we want to go back to, soft will keep the modification in stage
+git stash # save the modification in stage for future use, now the stage should be clean
+git checkout -b document # create and checkout a branch called "document"
+git stash apply stash@{0} # apply the modifications that are committed after 5030f12
+git add README.md # add the file we want to commit, in this case, it's README.md
+git commit -m "Mishra's work with the message: Documentation of setting up VM, SSH key for VM, docker image, ENV management, airflow" # make a new commit
+git push --set-upstream origin document # push the commits to Bitbucket
+# You can add more commits at document branch, when you are ready, open a pull request in Bitbucket (from "document" to "master").
+
+## Check listening ports with netstat (https://docs.rackspace.com/support/how-to/checking-listening-ports-with-netstat/)
+
+If you’re troubleshooting a service that you know is running normally, the next step is to ensure it’s listening on the correct network port.
+
+The netstat command shows the services listening to ports on a Linux server and the details of any connections currently made to them. The connection details to consider during basic network daemon troubleshooting are the addresses that the daemon is listening on (including the port number), the daemon’s process identifier (PID), and the program name.
+
+You need to run netstat on the server that is running the service. Netstat is not affected by your firewall configuration.
+
+sudo netstat -plnt ##Check ports
+sudo netstat -plnt | grep ':80' #Filter the list
+
+## When docker daemon gives Error starting userland proxy: listen tcp4 0.0.0.0:8000: bind: address already in use
+docker logs aiello_ie-init
+netstat -tulpn | grep :8000
+ps ax | grep 8000
+netstat -lp| grep :8000
+sudo su -
+netstat -lp| grep :8000 ##output: cp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      909513/python   
+kill -9 909513  ##this particular was sentiment recognition container as KL knows
+
+
+netstat -lp| grep :8000
+su mishra
+
+#new bash
+docker ps
+docker-compose down
+sudo ls data/postgress-data/
+sudo rm -fr data/postgress-data/
+sudo ls data/postgres-data/
+sudo ls data/
+
+
+
+##need to merge recent changes to the git repo
+
+#merge the current commit to a particular commit
+
+git status
+git pull
+git checkout mishra_readme 
+git merge master 
+
+
+#Restart Docker
+
+docker-compose down
+make clean-compose
+docker-compose up
+
+
+# Get inside docker file nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04 and remove the changes upon exit
+
+docker run --rm -it --entrypoint bash nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04
+
+
+
+
+
+pwd
+
+echo "$PYTHONPATH"
+
+
+ export PYTHONPATH=$PYTHONPATH:.
+
+## Set the diverged branch head to the last successful commit
+
+git fetch origin
+git reset --hard origin/mishra_readme
+
+# HEAD is now at 64ef5e7  NOTE: Development has been halt because the architecture changes * doc: add the document of the trigger mechanism in Airflow ELT DAG * doc: add the connection and location documentation in ELT DAG * doc: add the document of message sending in ELT
+git status
+git add file
+git commit -m ""
+git push
+
+# Git Acess key register
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/bitbucket_mishra
